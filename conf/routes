@@ -1,0 +1,17 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index()
+GET     /submit                     controllers.Application.testMongoInsert()
+
+#User
+GET     /users                 controllers.UserController.getUsers
+GET     /users/:name           controllers.UserController.getUser(name: String)
+POST    /users                 controllers.UserController.createUser
+PUT     /users/:id             controllers.UserController.updateUser(id: Long)
+DELETE  /users/:id             controllers.UserController.deleteUser(id: Long)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
