@@ -2,6 +2,22 @@
 
 @main("Welcome to Story2Sound") {
 
-    Testing mongo DB
-    @message
+
+    <div id="main">
+    <header>
+    </header>
+            <h1>Testing mongo DB @message</h1>
+            <form method="post" action="@routes.Application.loginSubmit()">
+                <input type="text" name="username" /><br/>
+                <input type="password" name="password" /><br/>
+
+                <input type="submit" value="Login" />
+            </form>
+    <footer>
+        <p><img  src="@routes.Assets.at("images/twitter.png")" alt="twitter"/>&nbsp;<img src="@routes.Assets.at("images/facebook.png")" alt="facebook"/></p>
+        <p><a href="index.html">Home</a> | <a href="examples.html">Examples</a> | <a href="page.html">A Page</a> | <a href="another_page.html">Another Page</a> | <a href="contact.php">Contact Us</a></p>
+    </footer>
+    </div>
+
+
 }

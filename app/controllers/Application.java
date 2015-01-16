@@ -1,9 +1,14 @@
 package controllers;
 
 import models.dao.User;
+import play.data.DynamicForm;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
+
+import java.util.Date;
+
+import static play.data.Form.form;
 
 public class Application extends Controller {
 
@@ -15,21 +20,13 @@ public class Application extends Controller {
         return ok(index.render(message));
     }
 
-    public static Result testMongoInsert(){
+    public static Result loginSubmit(){
 
-        User user=new User("Nestor");
+        DynamicForm dynamicForm = form().bindFromRequest();
+        User user= new User(dynamicForm.get("username"),dynamicForm.get("password"));
+        user.setTimestamp(new Date());
         user.insert();
-
-        user=new User("Mike");
-        user.insert();
-
-        user=new User("Tati");
-        user.insert();
-
-        user=User.findByName("Mike");
-
-        flash("message", user.getName());
-        return redirect(controllers.routes.Application.index());
+        return ok("ok, I received POST data. That's all...");
     }
 
 }

@@ -1,38 +1,43 @@
 package models;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import models.custom_mapper.MongoIdDeserializer;
+import models.dao.MongoId;
 import models.db.MyMongoClientFactory;
 import org.jongo.Jongo;
+import org.jongo.marshall.jackson.JacksonMapper;
+import org.jongo.marshall.jackson.configuration.MapperModifier;
 import play.Application;
 import play.Configuration;
 import play.GlobalSettings;
 import play.Logger;
 
 /**
- * Created by user on 04/01/2015.
+ * Created by n.diazgranados on 04/01/2015.
  */
 public class Global extends GlobalSettings {
 
     private static DB mongoDB;
     private static Jongo jongoDB;
-    public static final String DB_NAME="s2s";
 
     @Override
     public void onStart(Application app) {
-        Logger.info("Application has started");
+        Logger.info("Story2Sound has started");
         initDB();
     }
 
     @Override
     public void onStop(Application app) {
-        Logger.info("Application shutdown...");
+        Logger.info("Story2Sound shutdown...");
     }
     public static Jongo getMongoDB() {
         return jongoDB;
     }
 
-    private static void initDB() {
+    private void initDB() {
         Configuration configuration = play.Configuration.root();
         MyMongoClientFactory mongoFactory = new MyMongoClientFactory(configuration);
         MongoClient mongoClient = null;
@@ -42,7 +47,27 @@ public class Global extends GlobalSettings {
             e.printStackTrace();
         }
 
-        mongoDB = mongoClient.getDB(DB_NAME);
-        jongoDB = new Jongo(mongoDB);
+        CustomObjectMapper customMapper=new CustomObjectMapper();
+        mongoDB = mongoClient.getDB(mongoFactory.getDBName());
+        jongoDB = new Jongo(mongoDB,new JacksonMapper.Builder().addModifier(customMapper).build());
+    }
+
+
+    public class CustomObjectMapper implements MapperModifier {
+
+        @Override
+        public void modify(ObjectMapper objectMapper) {
+           /* SimpleModule module = new SimpleModule("ObjectIdmoduleSerialize");
+            module.addSerializer(MongoId.class, new IdSerializer());
+            objectMapper.registerModule(module);
+
+            SimpleModule moduleDes = new SimpleModule("ObjectIdmoduleDeserialize");
+            moduleDes.addDeserializer(MongoId.class, new IdDeserializer());
+            objectMapper.registerModule(moduleDes);  */
+
+            SimpleModule moduleMongoId = new SimpleModule();
+            moduleMongoId.addDeserializer(MongoId.class, new MongoIdDeserializer());
+            objectMapper.registerModule(moduleMongoId);
+        }
     }
 }
