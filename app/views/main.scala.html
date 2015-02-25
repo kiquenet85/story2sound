@@ -5,11 +5,67 @@
 <html>
     <head>
         <meta charset="utf-8"/>
+        <!--In order to optimize this site in mobile devices-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="Story2Sound" content="Un lugar para expresar tu voz a través del arte"/>
         <title>@title</title>
+        <!--1. Adding CSS files-->
+        <!--Adding google fonts-->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Baumans' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="stylesheet" media="screen" type="text/css" href="@routes.Assets.at("stylesheets/reset.css")">
+        <link rel="stylesheet" href="@routes.Assets.at("lightbox/css/lightbox.css")"/>
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <!--2. Adding java scripts files-->
+        <script src="@routes.Assets.at("javascripts/modernizr.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/respond.min.js")" type="text/javascript"></script>
+
+        <!--Include extern jQuery file but fall back to local file if extern one fails to load-->
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript">window.jQuery || document.write('<script type="text\/javascript" "@routes.Assets.at("javascripts/jquery-1.11.0.min.js")"><\/script>')</script>
+
+        <script src="@routes.Assets.at("lightbox/js/lightbox.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/prefixfree.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/jquery.slides.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/hello.js")" type="text/javascript"></script>
+        <script>
+        $(function() {
+          $('#slides').slidesjs({
+            height: 335,
+            navigation: false,
+            pagination: false,
+            effect: {
+              fade: {
+                speed: 400
+              }
+            },
+            callback: {
+                start: function(number)
+                {
+                    $("#slider_content1,#slider_content2,#slider_content3").fadeOut(500);
+                },
+                complete: function(number)
+                {
+                    $("#slider_content" + number).delay(500).fadeIn(1000);
+                }
+            },
+            play: {
+                active: false,
+                auto: true,
+                interval: 6000,
+                pauseOnHover: false,
+                effect: "fade"
+            }
+          });
+        });
+
+
+        $("#alternative_menu").change(function() {
+            $selected = $("#alternative_menu option:selected");
+            window.location.href = "http://www.story2sound.com/" + $selected.val();
+        });
+        </script>
     </head>
     <body>
         @content
