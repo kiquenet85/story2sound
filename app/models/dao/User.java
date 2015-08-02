@@ -1,48 +1,50 @@
 package models.dao;
 
-import com.mongodb.WriteResult;
-import models.Global;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import models.db.JongoManager;
 import org.jongo.MongoCollection;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by n.diazgranados on 04/01/2015.
  */
-public class User {
+//@JsonTypeInfo(use = JsonTypeInfo.Id.NONE
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User extends BaseObject {
 
+    public static final String COL_ID = "_id";
     public static final String COLLECTION_NAME= "users";
-    public static final String COL_ID= "_id";
     public static final String COL_PASS= "password";
     public static final String COL_NAME= "name";
     public static final String COL_TIMESTAMP= "timestamp";
 
-    public static MongoCollection users() {
-        return Global.getMongoDB().getCollection(COLLECTION_NAME);
-    }
-
     private MongoId _id;
     private String name;
+    //@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.sss'Z'", timezone="UTC-5")
     private Date timestamp;
     private String password;
+    private String email;
+    private List<Integer> celNumbers;
+    private int celNumber;
+    private List<Integer> phoneNumbers;
+    private int phoneNumber;
+    private List<String> addresses;
+    private String address;
+
 
     public User(String name, String password) {
         this.name = name;
         this.password=password;
     }
 
-    public User (){}
-
-    public Object insert() {
-        WriteResult result = users().save(this);
-        if (result.isUpdateOfExisting()) {
-            return result.getUpsertedId();
-        }
-        return null;
+    public User (){
     }
 
-    public void remove() {  users().remove(this._id.get$oid());  }
-
+    @Override
     public MongoId get_id() { return _id; }
 
     public void set_id(MongoId _id) { this._id = _id; }
@@ -63,15 +65,16 @@ public class User {
         this.timestamp = timestamp;
     }
 
-    public String getPassword() {
+    @JsonIgnore public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPasswword(String password) {
         this.password = password;
     }
 
-    public static User findByName(String name) {
-        return users().findOne("{"+COL_NAME+": #}", name).as(User.class);
+    @Override
+    public MongoCollection getCollection() {
+        return JongoManager.getCollection(COLLECTION_NAME);
     }
 }
