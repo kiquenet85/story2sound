@@ -12,7 +12,7 @@ import models.dao.MongoId;
 import play.Logger;
 
 import java.io.IOException;
-
+//http://www.davismol.net/2015/03/05/jackson-json-deserialize-a-list-of-objects-of-subclasses-of-an-abstract-class/
 public class MongoIdDeserializer extends JsonDeserializer<MongoId> {
 
     @Override
